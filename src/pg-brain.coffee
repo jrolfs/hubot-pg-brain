@@ -33,7 +33,7 @@ module.exports = (robot) ->
   query = client.query("SELECT key, value FROM brain")
   query.on 'row', (row) ->
     data = {}
-    data[row.key] = value
+    data[row.key] = row.value
     robot.brain.mergeData data
     robot.logger.debug "pg-brain loaded. #{row.key}"
 
