@@ -16,6 +16,7 @@
 # Author:
 #   Yannick Schutz
 
+_        = require 'lodash'
 Postgres = require 'pg'
 
 # sets up hooks to persist the brain into postgres.

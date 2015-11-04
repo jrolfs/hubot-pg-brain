@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "coffee-script": "~1.6",
+    "lodash": "^3.10.1",
     "pg": "^4.4.3"
   },
   "devDependencies": {
