@@ -24,8 +24,7 @@ module.exports = (robot) ->
 
   database_url = process.env.DATABASE_URL
 
-  if !database_url?
-    throw new Error('pg-brain requires a DATABASE_URL to be set.')
+  throw new Error('pg-brain requires a DATABASE_URL to be set.') unless database_url?
 
   client = new Postgres.Client(database_url)
   client.connect()
@@ -38,16 +37,26 @@ module.exports = (robot) ->
     robot.brain.mergeData data
     robot.logger.debug "pg-brain loaded. #{row.key}"
 
-  client.on "error", (err) ->
-    robot.logger.error err
+  client.on "error", (error) ->
+    robot.logger.error error
 
   robot.brain.on 'save', (data) ->
-    for key, value of data
-      query = client.query("INSERT INTO brain(key, value)  VALUES ($1, $2)", [key, value])
-      query.on "error", (err) ->
-        console.log err
-        query = client.query("UPDATE brain SET value = $2 WHERE key = $1", [key, value])
-      robot.logger.debug "pg-brain saved. #{key}"
+    keys = []
+
+    client.query "SELECT key FROM brain", (error, result) ->
+      return robot.logger.debug(error) if error
+
+      keys = _.pluck(result.rows, 'key')
+
+      for key in keys
+        sql = if key in keys
+          "UPDATE brain SET value = $2 WHERE key = $1"
+        else
+          "INSERT INTO brain(key, value) VALUES ($1, $2)"
+
+        query = client.query(sql, [key, data[key]])
+
+        robot.logger.debug "pg-brain saved. #{key}"
 
   robot.brain.on 'close', ->
     client.end()
