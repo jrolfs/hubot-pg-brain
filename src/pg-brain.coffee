@@ -48,7 +48,7 @@ module.exports = (robot) ->
 
       keys = _.pluck(result.rows, 'key')
 
-      for key in keys
+      for key in data
         sql = if key in keys
           "UPDATE brain SET value = $2 WHERE key = $1"
         else
