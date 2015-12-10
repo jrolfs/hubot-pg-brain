@@ -43,6 +43,8 @@ module.exports = (robot) ->
   robot.brain.on 'save', (data) ->
     keys = []
 
+    robot.logger.debug 'save'
+
     client.query "SELECT key FROM brain", (error, result) ->
       return robot.logger.debug(error) if error
 
