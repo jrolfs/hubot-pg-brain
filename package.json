@@ -1,7 +1,7 @@
 {
   "name": "hubot-pg-brain",
   "description": "Hubot brain powered by JSON postgresql",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Yannick <yannick@yannick.io>",
   "license": "MIT",
   "keywords": [
